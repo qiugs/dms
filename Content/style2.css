@@ -1,0 +1,253 @@
+/*
+    DEMO STYLE
+*/
+
+@import "https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700";
+body {
+    font-family: 'Poppins', sans-serif;
+    background: #fafafa;
+}
+
+p {
+    font-family: 'Poppins', sans-serif;
+    font-size: 1.1em;
+    font-weight: 300;
+    line-height: 1.7em;
+    color: #999;
+}
+
+a,
+a:hover,
+a:focus {
+    color: inherit;
+    text-decoration: none;
+    transition: all 0.3s;
+}
+
+.container-fluid {
+    padding-left: 0;
+}
+
+.navbar {
+    padding: 15px 10px 0px;
+    background: #fff;
+    border: none;
+    border-radius: 0;
+}
+
+.navbar-mb40 {
+    margin-bottom: 40px;
+}
+
+.narbar_boxshadow {
+    box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.navbar-btn {
+    box-shadow: none;
+    outline: none !important;
+    border: none;
+}
+
+.line {
+    width: 100%;
+    height: 1px;
+    border-bottom: 1px dashed #ddd;
+    margin: 40px 0;
+}
+
+/* ---------------------------------------------------
+    SIDEBAR STYLE
+----------------------------------------------------- */
+
+.wrapper {
+    display: flex;
+    width: 100%;
+}
+
+#sidebar {
+    width: 250px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    z-index: 999;
+    background: #7386D5;
+    color: #fff;
+    transition: all 0.3s;
+}
+
+#sidebar.active {
+    margin-left: -250px;
+}
+
+#sidebar .sidebar-header {
+    padding: 20px;
+    background: #6d7fcc;
+}
+
+#sidebar ul.components {
+    padding: 20px 0;
+    border-bottom: 1px solid #47748b;
+}
+
+#sidebar ul p {
+    color: #fff;
+    padding: 10px;
+}
+
+#sidebar ul li a {
+    padding: 10px;
+    font-size: 1.1em;
+    display: block;
+}
+
+#sidebar ul li a:hover {
+    color: #7386D5;
+    background: #fff;
+}
+
+#sidebar ul li.active>a,
+a[aria-expanded="true"] {
+    color: #fff;
+    background: #6d7fcc;
+}
+
+a[data-toggle="collapse"] {
+    position: relative;
+}
+
+.dropdown-toggle::after {
+    display: block;
+    position: absolute;
+    top: 50%;
+    right: 20px;
+    transform: translateY(-50%);
+}
+
+ul ul a {
+    font-size: 0.9em !important;
+    padding-left: 30px !important;
+    background: #6d7fcc;
+}
+
+ul.CTAs {
+    padding: 20px;
+}
+
+ul.CTAs a {
+    text-align: center;
+    font-size: 0.9em !important;
+    display: block;
+    border-radius: 5px;
+    margin-bottom: 5px;
+}
+
+a.download {
+    background: #fff;
+    color: #7386D5;
+}
+
+a.article,
+a.article:hover {
+    background: #6d7fcc !important;
+    color: #fff !important;
+}
+
+/* ---------------------------------------------------
+    CONTENT STYLE
+----------------------------------------------------- */
+
+#content {
+    width: calc(100% - 250px);
+    padding: 40px;
+    min-height: 100vh;
+    transition: all 0.3s;
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+
+#content.active {
+    width: 100%;
+}
+
+.dropdownSelectUser {
+    color: #495057;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid #ced4da;
+    border-radius: 5px;
+    transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+}
+
+/* ---------------------------------------------------
+    MEDIAQUERIES
+----------------------------------------------------- */
+@media (max-width: 768px) {
+    #sidebar {
+        margin-left: -250px;
+    }
+    #sidebar.active {
+        margin-left: 0;
+    }
+    #content {
+        width: 100%;
+    }
+    #content.active {
+        width: calc(100% - 250px);
+    }
+    #sidebarCollapse span {
+        display: none;
+    }
+}
+
+/* ---------------------------------------------------
+    File Manager
+----------------------------------------------------- */
+.bord-btm { border-bottom: 1px solid rgba(0,0,0,0.07); }
+.file-panel{border-top:1px solid rgba(0,0,0,0.07);margin-top:20px}
+.file-toolbar{padding:5px 0;text-align:center}
+.file-toolbar>.btn-file-toolbar{padding:0;display:inline-block;float:none !important}
+.file-toolbar>.btn-file-toolbar .btn{padding:6px}
+.file-toolbar>.btn-file-toolbar #_inputSearchFile::placeholder { font-size: 12px; line-height: 30px; color: rgba(0,0,0,.5) !important; }
+.file-toolbar>.btn-file-toolbar #_inputSearchFile::-moz-placeholder { font-size: 12px; line-height: 30px; color: rgba(0,0,0,.5) !important; }
+.file-toolbar>.btn-file-toolbar #_inputSearchFile:-moz-placeholder { font-size: 12px; line-height: 30px; color: rgba(0,0,0,.5) !important; }
+.file-toolbar>.btn-file-toolbar #_inputSearchFile:-ms-input-placeholder { font-size: 12px; line-height: 30px; color: rgba(0,0,0,.5) !important; }
+.file-toolbar>.btn-file-toolbar #_inputSearchFile::-ms-input-placeholder { font-size: 12px; line-height: 30px; color: rgba(0,0,0,.5) !important; }
+.file-list{list-style:none;padding:20px 0 10px;}
+.file-list>li{position:relative;padding:12px;border-radius:1px; border-bottom: 1px solid rgba(0,0,0,0.02);}
+.file-list>li:after{content:'';display:table;clear:both}
+.file-list>li:nth-child(odd){background-color:rgba(0,0,0,0)}
+.file-list>li:hover{background-color:rgba(0,0,0,0.05)}
+.file-list>li.selected{background-color:#f2f0c2}
+.file-list .media{overflow:hidden;margin:0 20px 0 0}
+.file-list .media-block>.media-left{font-size:1.8em;line-height:1.2em; padding-right:10px;}
+.file-list .media-block .media-body{vertical-align:middle}
+.file-list .file-details{display:block;overflow:hidden;margin-right:50px}
+.file-list .file-name{color:#4d627b;margin-bottom:0;padding-bottom: 0;font-weight:200 !important;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size: 0.8em !important;line-height: 1.25em; }
+.file-list .file-name.single-line{line-height:1.5em; font-size: 1.2em !important;}
+.file-list .file-infos{font-size:0.6em;font-weight:300;}
+.file-list .file-settings{float:right;font-size:85%;text-align:right}
+.file-list .file-settings a,.file-list .file-settings button{padding:10px 5px;display:inline-block}
+
+@media (min-width: 768px){
+	.file-panel{border-top:0;margin-top:0}
+	.file-manager .file-sidebar{padding-right:15px;border-right:1px solid rgba(0,0,0,0.07)}
+	.file-toolbar{padding:5px 0;text-align:left}
+	.file-toolbar>.btn-file-toolbar{padding:0 10px;display:inline-block}
+	.file-toolbar>.btn-file-toolbar.pull-right{float:right !important}
+	.file-toolbar>.btn-file-toolbar:not(:first-child){border-left:1px solid rgba(0,0,0,0.07)}
+	.file-toolbar>.btn-file-toolbar:first-child{padding-left:0}
+}
+
+.media-block .media-left{display:block;float:left}
+.media-block .media-right{float:right}
+.media-block .media-body{display:block;overflow:hidden;width:auto}
+.media-block .media-body>p {margin-bottom:-7px;margin-top:5px;}
+.media-block:after{content:'';display:table;clear:both}
+
+/* ---------------------------------------------------
+    Custom FontAwesome
+----------------------------------------------------- */
+.fa-1x5 {font-size:1.5em}

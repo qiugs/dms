@@ -1,0 +1,31 @@
+﻿@{
+    ViewBag.Title = "Tiny SAP";
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>@ViewBag.Title</title>
+    <!-- CSS -->
+    <link rel="stylesheet" href="~/Content/loginpage.css">
+    <link rel="stylesheet" href="~/Content/bootstrap.min.css">
+</head>
+<body>
+    <div class="body-content">
+        <video autoplay muted loop id="myLoginVideo">
+            <source src="~/Content/Videos/singapore.mp4" type="video/mp4">
+        </video>
+        @RenderBody()
+    </div>
+
+    <!-- JS -->
+    <!-- jQuery CDN - Slim version (=without AJAX) -->
+    <script src="~/Scripts/jquery-3.3.1.slim.min.js"></script>
+    <script src="~/Scripts/umd/popper.min.js"></script>
+    <script src="~/Scripts/bootstrap.min.js"></script>
+    @RenderSection("scripts", required: false)
+</body>
+</html>

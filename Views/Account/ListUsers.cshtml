@@ -1,0 +1,75 @@
+﻿@{
+    ViewBag.Title = "ListUsers";
+    RMA_Docker.Classes.AccessControl aC = new RMA_Docker.Classes.AccessControl();
+    var uName = Context.User.Identity.Name;
+}
+
+<nav class="navbar navbar-expand-lg">
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="nav navbar-nav">
+            <li class="nav-item">
+                <h4 class="text-info">Account - Users</h4>
+                <h6>Listing all users</h6>
+            </li>
+        </ul>
+    </div>
+</nav>
+
+<div>
+    <hr />
+    <div class="w-100 p-1">
+        @if (aC.AccessAccountUserRegister(uName)) {
+            @Html.ActionLink("Register", "Register", null, new { @class = "btn btn-outline-success float-right" })
+        }
+    </div>
+
+    <div class="mt-5">
+        <table id="usersDiv" class="table table-striped table-bordered" style="width:100%">
+            <tbody>
+                <tr>
+                    <td>No Records</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- DataTable JS -->
+<script type="text/javascript" src="~/Scripts/datatables.min.js"></script>
+<script>
+    $(document).ready(function () {
+        InitialDataLoad();
+    });
+
+    function InitialDataLoad() {
+        $.ajax({
+            url: '@Url.Action("ListUsers")',
+            type: 'POST',
+            data: JSON.stringify({ userName: "@uName" }),
+            dataType: 'json',
+            contentType: "application/json; charset=utf-8",
+            success: function (result) {
+                if (result.Total > 0) {
+                    var dataTbl = $('#usersDiv').DataTable({
+                        destroy: true,
+                        info: false,
+                        order: [0, "asc"],
+                        data: result.Data,
+                        columns: [
+                            { data: "UserName", title: "User Name" },
+                            { data: "MobileAlias", title: "Mobile Alias" },
+                            { data: "Email", title: "Email" },
+                            { data: "LastActivityDate", title: "Last Activity Date" },
+                            { data: "ExpiredDate", title: "Expired Date" },
+                            { data: null, render: function (data) { var link = '@Html.ActionLink("Edit", "EditUser", new { userName="_Data" }, new { @class = "btn btn-outline-info" })'
+                                    link = link.replace(/\_Data/g, data.UserName); var link2 = '@Html.ActionLink("Delete", "DeleteUser_Controller", new { userName = "_Data" }, new { @class= "btn btn-outline-warning ml-1", onclick= "return confirm(\"Remove user _Data  permanently? \")" })'
+                                link2 = link2.replace(/\_Data/g, data.UserName); return link + " " + link2; }, targets: -1, title: "Actions" }],
+                        aoColumnDefs: [{ bSortable: false, aTargets: [5] }, { "width": "150px", targets: 5 }]
+                    });
+                }
+            },
+            error: function (result) { console.log(result); }
+        });
+    }
+
+</script>

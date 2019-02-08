@@ -1,0 +1,111 @@
+﻿@model RMA_Docker.Models.FeatureAssignmentModel
+@{
+    ViewBag.Title = "Feature Assignment";
+    RMA_Docker.Classes.AccessControl aC = new RMA_Docker.Classes.AccessControl();
+    var uName = Context.User.Identity.Name;
+}
+
+<nav class="navbar navbar-expand-lg">
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="nav navbar-nav">
+            <li class="nav-item">
+                <h4 class="text-info">@ViewBag.Title</h4>
+                <h6></h6>
+            </li>
+        </ul>
+    </div>
+</nav>
+
+<div class="w-100" style="min-height:70px;">
+    <hr />
+    @if (aC.AccessAccountFeatureManagement(uName)) {
+        @Html.ActionLink("Feature Management", "FeaturesManagement", null, new { @class = "btn btn-outline-success float-right" })
+    }
+</div>
+
+<div class="w-100">
+    @using (Html.BeginForm()) {
+        <div class="form-row">
+            <div class="form-group col-md-3">
+                @Html.Label("User", new { @class = "control-label" })
+                @Html.DropDownList("userSelection", Model.DropdownUser, "-- Select a user --", new { @class = "form-control" })
+            </div>
+            <div class="form-group col-md-3">
+                @Html.Label("Role", new { @class = "control-label" })
+                @Html.DropDownList("roleSelection", Model.DropdownRole, "-- Select a role --", new { @class = "form-control" })
+            </div>
+            <div class="form-group col-md-6">
+                @Html.Label("Feature", new { @class = "control-label" })
+                @Html.DropDownList("featureSelection", Model.DropdownFeature, "-- Select a feature --", new { @class = "form-control" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="text-info small pl-3"><span class="font-italic">Info : must select either a User or a Role.</span></div>
+            <div class="text-danger small pl-3"><span id="featuresAssignmentErrorMsg"></span></div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-auto">
+                <input type="submit" name="submit" value="Create" class="btn btn-outline-success" onclick="return CreateAssignment()" />
+            </div>
+        </div>
+
+        <div class="form-group mt-5 w-100">
+            <table id="FeatureAssignedTable" class="table table-striped table-bordered" style="width:100%">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>User</th>
+                        <th>Role</th>
+                        <th>Last Modified</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.accessProfile) {
+                        <tr>
+                            <td>@item.FeatureName</td>
+                            <td>@item.UserName</td>
+                            <td>@item.RoleName</td>
+                            <td>@item.LastUpdateDate</td>
+                            <td>
+                                <input type="submit" name="submit" value="Delete" class="btn btn-outline-warning"
+                                       onclick='return DeleteAssignment("@item.FeatureName", "@item.UserName", "@item.RoleName")' />
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+</div>
+
+<!-- DataTable JS -->
+<script type="text/javascript" src="~/Scripts/datatables.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('#FeatureAssignedTable').DataTable({ destroy: true, info: false, order: [[0, "asc"]], aoColumnDefs: [{ "width": "70px", targets: 4 }, { bSortable: false, aTargets: [4] }] });
+    });
+
+    function CreateAssignment() {
+        if ($('#userSelection').find(":selected").val().length > 0 && $('#roleSelection').find(":selected").val().length > 0) {
+            $('#featuresAssignmentErrorMsg').text("Error - Please select either a user or a role.");
+        } else if ($('#userSelection').find(":selected").val() != "" || $('#roleSelection').find(":selected").val() != "") {
+            if ($('#featureSelection').find(":selected").val() != "") { return true; }
+            else { $('#featuresAssignmentErrorMsg').text("Error - no feature is selected."); }
+        } else { $('#featuresAssignmentErrorMsg').text("Error - no user or role are selected."); }
+        return false;
+    }
+
+    function DeleteAssignment(fName, uName, rName) {
+        if (confirm("Confirm to remove this ?")) {
+            $('#userSelection').val(uName);
+            $('#roleSelection').val(rName);
+            $('#featureSelection').val(fName);
+            return true;
+        }
+        return false;
+    }
+</script>
+

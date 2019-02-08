@@ -1,0 +1,68 @@
+﻿@model RMA_Docker.Models.LogOnModel
+
+@{
+    ViewBag.Title = "Logon";
+    Layout = "~/Views/Shared/_AccountLayout.cshtml";
+}
+
+<div class="clearfix row justify-content-end align-self-center mt-md-5">
+    <div class="col-md-4 text-secondary">
+        <section id="loginForm" class="card rounded">
+            <div class="card-header">
+                <h2 class="mb-0">@ViewBag.Title</h2>
+                <h6 class="mb-0"><i><small>Use a local account to log in</small></i></h6>
+            </div>
+
+            <div class="card-body">
+                @using (Html.BeginForm("Logon", "Account", new { returnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form", role = "form", autocomplete = "off" })) {
+                    @Html.AntiForgeryToken()
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.UserName, new { @*@class = "col-md-2 control-label"*@})
+                        <div>
+                            @Html.TextBoxFor(m => m.UserName, new { @class = "form-control form-control-lg rounded-0", required = "" })
+                            @Html.ValidationMessageFor(m => m.UserName, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.Password, new { @*@class = "col-md-2 control-label"*@})
+                        <div>
+                            @Html.PasswordFor(m => m.Password, new { @class = "form-control form-control-lg rounded-0", required = "" })
+                            @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-offset-2">
+                            <div class="float-left">
+                                <div class="pl-1 custom-checkbox">
+                                    <h6>
+                                        @*
+                                        @Html.CheckBoxFor(m => m.RememberMe)
+                                        @Html.LabelFor(m => m.RememberMe, new { @class = "custom-control-description small" })
+                                        <br />
+                                        @Html.ActionLink("Register as a new user", "Register", null, null, new { @class= "small" })
+                                        *@
+                                        <br />
+                                        @* Enable this once you have account confirmation enabled for password reset functionality *@
+                                        @*@Html.ActionLink("Forgot your password?", "ForgotPassword", "Account", null, new { @class = "small" })*@
+                                    </h6>
+                                </div>
+                            </div>
+                            <div class="float-right mt-2">
+                                <input type="submit" value="Log in" class="btn btn-success btn-lg float-right" />
+                            </div>
+                        </div>
+                    </div>
+
+
+                }
+
+            </div>
+        </section>
+    </div>
+    <div class="col-md-2"></div>
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

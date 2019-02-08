@@ -1,0 +1,131 @@
+﻿@model RMA_Docker.Models.FeatureProfileModel
+
+@{
+    ViewBag.Title = "Feature Management";
+}
+
+<nav class="navbar navbar-expand-lg">
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="nav navbar-nav">
+            <li class="nav-item">
+                <h4 class="text-info">@ViewBag.Title</h4>
+                <h6></h6>
+            </li>
+        </ul>
+    </div>
+</nav>
+
+@using (Html.BeginForm()) {
+    @Html.AntiForgeryToken()
+    <div class="form-horizontal">
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+           
+            <div class="text-danger small pl-3">
+                <span id="featuresManagementErrorMsg">
+                    @if (TempData["FeaturesManagementErrorMsg"] != null) {
+                        @TempData["FeaturesManagementErrorMsg"].ToString()
+                    }
+                </span>
+            </div>
+    
+
+        <input hidden id="OldFeatureName" name="OldFeatureName" value="" />
+
+        <div class="form-group">
+            @Html.Label("Feature Name", new { @class = "control-label col-md-4" })
+            <div class="col-md-8">
+                @Html.EditorFor(model => model.FeatureName, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.FeatureName, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.Label("Remarks", new { @class = "control-label col-md-4" })
+            <div class="col-md-8">
+                @Html.EditorFor(model => model.Remarks, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Remarks, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" name="submit" value="Create" class="btn btn-outline-success" 
+                       onclick="return submitFeatureMgtCreate()" />
+                <input id="submitUpdate" type="submit" name="submit" value="Update" class="btn btn-outline-info" 
+                       onclick="return submitFeatureMgtUpdate()" />
+            </div>
+        </div>
+    </div>
+
+    <div class="form-group mt-5">
+        <hr />
+        <div class="col-md-auto">
+            <table id="featuresAssignedTable" class="table table-striped table-bordered" style="width:100%">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Remarks</th>
+                        <th>Last Updated</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.FeatureProfileList) {
+                    <tr>
+                        <td>@item.FeatureName</td>
+                        <td>@item.FeatureRemarks</td>
+                        <td>@item.LastUpdateDate.ToString()</td>
+                        <td>
+                            <input type="submit" name="submit" value="Edit" class="btn btn-outline-info" 
+                                   onclick='return submitFeatureMgtEdit("@item.FeatureName", "@item.FeatureRemarks")' />
+                            <input type="submit" name="submit" value="Delete" class="btn btn-outline-warning " 
+                                   onclick='return submitFeatureMgtDelete("@item.FeatureName")' />
+                        </td>
+                    </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+}
+
+<!-- DataTable JS -->
+<script type="text/javascript" src="~/Scripts/datatables.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('#submitUpdate').hide();
+        $('#featuresAssignedTable').DataTable({destroy:true,info:false,order:[[0,"asc"]],aoColumnDefs:[{"width":"150px",targets:3},{bSortable:false,aTargets:[3]}]});
+    });
+
+    function submitFeatureMgtEdit(name, remarks) {
+        $('#FeatureName').val(name);
+        $('#OldFeatureName').val(name);
+        $('#Remarks').val(remarks);
+        $('#submitUpdate').show();
+        return false;
+    }
+
+    function submitFeatureMgtDelete(name) {
+        if (confirm("Confirm to remove this ?")) {
+            $('#FeatureName').val(name);
+            return true;
+        }
+        return false;
+    }
+
+    function submitFeatureMgtUpdate() {
+        if ($('#FeatureName').val().trim().length > 0) {
+            if ($('#FeatureName').val().trim() == $('#OldFeatureName').val().trim()) {
+                $('#featuresManagementErrorMsg').text("Error - Cannot update as Feature Name is the same...");
+            } else { return true; }
+        } else { $('#featuresManagementErrorMsg').text("Error - Featue Name cannot be empty."); }
+        return false;
+    }
+
+    function submitFeatureMgtCreate() {
+        if ($('#FeatureName').val().trim().length > 0) { return true; }
+        $('#featuresManagementErrorMsg').text("Error - Featue Name cannot be empty.");
+        return false;
+    }
+</script>

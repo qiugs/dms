@@ -1,0 +1,259 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="OOTSDBModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityType Name="aspnet_Profile">
+    <Key>
+      <PropertyRef Name="UserId" />
+    </Key>
+    <Property Name="UserId" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="PropertyNames" Type="ntext" Nullable="false" />
+    <Property Name="PropertyValuesString" Type="ntext" Nullable="false" />
+    <Property Name="PropertyValuesBinary" Type="image" Nullable="false" />
+    <Property Name="LastUpdatedDate" Type="datetime" Nullable="false" />
+  </EntityType>
+  <EntityType Name="aspnet_Roles">
+    <Key>
+      <PropertyRef Name="RoleId" />
+    </Key>
+    <Property Name="ApplicationId" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="RoleId" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="RoleName" Type="nvarchar" MaxLength="256" Nullable="false" />
+    <Property Name="LoweredRoleName" Type="nvarchar" MaxLength="256" Nullable="false" />
+    <Property Name="Description" Type="nvarchar" MaxLength="256" />
+  </EntityType>
+  <EntityType Name="aspnet_Users">
+    <Key>
+      <PropertyRef Name="UserId" />
+    </Key>
+    <Property Name="ApplicationId" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="UserId" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="UserName" Type="nvarchar" MaxLength="256" Nullable="false" />
+    <Property Name="LoweredUserName" Type="nvarchar" MaxLength="256" Nullable="false" />
+    <Property Name="MobileAlias" Type="nvarchar" MaxLength="16" />
+    <Property Name="IsAnonymous" Type="bit" Nullable="false" />
+    <Property Name="LastActivityDate" Type="datetime" Nullable="false" />
+  </EntityType>
+  <EntityType Name="aspnet_UsersInRoles">
+    <Key>
+      <PropertyRef Name="UserId" />
+      <PropertyRef Name="RoleId" />
+    </Key>
+    <Property Name="UserId" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="RoleId" Type="uniqueidentifier" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Files">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="VirtualPath" Type="nvarchar" MaxLength="200" Nullable="false" />
+    <Property Name="DateTimeUploaded" Type="datetime" Nullable="false" />
+    <Property Name="NiceNameOrAreaName" Type="nvarchar" MaxLength="50" />
+    <Property Name="Description" Type="nvarchar" MaxLength="500" />
+  </EntityType>
+  <EntityType Name="FilesDownloadAuditTrails">
+    <Key>
+      <PropertyRef Name="FileID" />
+      <PropertyRef Name="UserID" />
+      <PropertyRef Name="DateTimeDownloaded" />
+    </Key>
+    <Property Name="FileID" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="UserID" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="DateTimeDownloaded" Type="datetime" Nullable="false" />
+  </EntityType>
+  <EntityType Name="RolesFilesAuthorizations">
+    <Key>
+      <PropertyRef Name="RoleID" />
+      <PropertyRef Name="FileID" />
+    </Key>
+    <Property Name="RoleID" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="FileID" Type="uniqueidentifier" Nullable="false" />
+  </EntityType>
+  <EntityType Name="UserLoginAuditTrails">
+    <Key>
+      <PropertyRef Name="UserID" />
+      <PropertyRef Name="DateTimeLogged" />
+    </Key>
+    <Property Name="UserID" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="DateTimeLogged" Type="datetime" Nullable="false" />
+  </EntityType>
+  <EntityType Name="UsersFilesAuthorizations">
+    <Key>
+      <PropertyRef Name="UserID" />
+      <PropertyRef Name="FileID" />
+    </Key>
+    <Property Name="UserID" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="FileID" Type="uniqueidentifier" Nullable="false" />
+  </EntityType>
+  <Association Name="FK__aspnet_Pr__UserI__38996AB5">
+    <End Role="aspnet_Users" Type="Self.aspnet_Users" Multiplicity="1" />
+    <End Role="aspnet_Profile" Type="Self.aspnet_Profile" Multiplicity="0..1" />
+    <ReferentialConstraint>
+      <Principal Role="aspnet_Users">
+        <PropertyRef Name="UserId" />
+      </Principal>
+      <Dependent Role="aspnet_Profile">
+        <PropertyRef Name="UserId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__aspnet_Us__RoleI__4AB81AF0">
+    <End Role="aspnet_Roles" Type="Self.aspnet_Roles" Multiplicity="1" />
+    <End Role="aspnet_UsersInRoles" Type="Self.aspnet_UsersInRoles" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="aspnet_Roles">
+        <PropertyRef Name="RoleId" />
+      </Principal>
+      <Dependent Role="aspnet_UsersInRoles">
+        <PropertyRef Name="RoleId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__aspnet_Us__UserI__49C3F6B7">
+    <End Role="aspnet_Users" Type="Self.aspnet_Users" Multiplicity="1" />
+    <End Role="aspnet_UsersInRoles" Type="Self.aspnet_UsersInRoles" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="aspnet_Users">
+        <PropertyRef Name="UserId" />
+      </Principal>
+      <Dependent Role="aspnet_UsersInRoles">
+        <PropertyRef Name="UserId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_FilesDownloadAuditTrails_aspnet_Users">
+    <End Role="aspnet_Users" Type="Self.aspnet_Users" Multiplicity="1" />
+    <End Role="FilesDownloadAuditTrails" Type="Self.FilesDownloadAuditTrails" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="aspnet_Users">
+        <PropertyRef Name="UserId" />
+      </Principal>
+      <Dependent Role="FilesDownloadAuditTrails">
+        <PropertyRef Name="UserID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_FilesDownloadAuditTrails_Files">
+    <End Role="Files" Type="Self.Files" Multiplicity="1" />
+    <End Role="FilesDownloadAuditTrails" Type="Self.FilesDownloadAuditTrails" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Files">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="FilesDownloadAuditTrails">
+        <PropertyRef Name="FileID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_RolesFilesAuthorizations_aspnet_Roles">
+    <End Role="aspnet_Roles" Type="Self.aspnet_Roles" Multiplicity="1" />
+    <End Role="RolesFilesAuthorizations" Type="Self.RolesFilesAuthorizations" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="aspnet_Roles">
+        <PropertyRef Name="RoleId" />
+      </Principal>
+      <Dependent Role="RolesFilesAuthorizations">
+        <PropertyRef Name="RoleID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_RolesFilesAuthorizations_Files">
+    <End Role="Files" Type="Self.Files" Multiplicity="1" />
+    <End Role="RolesFilesAuthorizations" Type="Self.RolesFilesAuthorizations" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Files">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="RolesFilesAuthorizations">
+        <PropertyRef Name="FileID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_UserLoginAuditTrails_aspnet_Users">
+    <End Role="aspnet_Users" Type="Self.aspnet_Users" Multiplicity="1" />
+    <End Role="UserLoginAuditTrails" Type="Self.UserLoginAuditTrails" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="aspnet_Users">
+        <PropertyRef Name="UserId" />
+      </Principal>
+      <Dependent Role="UserLoginAuditTrails">
+        <PropertyRef Name="UserID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_UsersFilesAuthorizations_aspnet_Users">
+    <End Role="aspnet_Users" Type="Self.aspnet_Users" Multiplicity="1" />
+    <End Role="UsersFilesAuthorizations" Type="Self.UsersFilesAuthorizations" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="aspnet_Users">
+        <PropertyRef Name="UserId" />
+      </Principal>
+      <Dependent Role="UsersFilesAuthorizations">
+        <PropertyRef Name="UserID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_UsersFilesAuthorizations_Files">
+    <End Role="Files" Type="Self.Files" Multiplicity="1" />
+    <End Role="UsersFilesAuthorizations" Type="Self.UsersFilesAuthorizations" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Files">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="UsersFilesAuthorizations">
+        <PropertyRef Name="FileID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="OOTSDBModelStoreContainer">
+    <EntitySet Name="aspnet_Profile" EntityType="Self.aspnet_Profile" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="aspnet_Roles" EntityType="Self.aspnet_Roles" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="aspnet_Users" EntityType="Self.aspnet_Users" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="aspnet_UsersInRoles" EntityType="Self.aspnet_UsersInRoles" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Files" EntityType="Self.Files" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="FilesDownloadAuditTrails" EntityType="Self.FilesDownloadAuditTrails" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="RolesFilesAuthorizations" EntityType="Self.RolesFilesAuthorizations" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="UserLoginAuditTrails" EntityType="Self.UserLoginAuditTrails" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="UsersFilesAuthorizations" EntityType="Self.UsersFilesAuthorizations" Schema="dbo" store:Type="Tables" />
+    <AssociationSet Name="FK__aspnet_Pr__UserI__38996AB5" Association="Self.FK__aspnet_Pr__UserI__38996AB5">
+      <End Role="aspnet_Users" EntitySet="aspnet_Users" />
+      <End Role="aspnet_Profile" EntitySet="aspnet_Profile" />
+    </AssociationSet>
+    <AssociationSet Name="FK__aspnet_Us__RoleI__4AB81AF0" Association="Self.FK__aspnet_Us__RoleI__4AB81AF0">
+      <End Role="aspnet_Roles" EntitySet="aspnet_Roles" />
+      <End Role="aspnet_UsersInRoles" EntitySet="aspnet_UsersInRoles" />
+    </AssociationSet>
+    <AssociationSet Name="FK__aspnet_Us__UserI__49C3F6B7" Association="Self.FK__aspnet_Us__UserI__49C3F6B7">
+      <End Role="aspnet_Users" EntitySet="aspnet_Users" />
+      <End Role="aspnet_UsersInRoles" EntitySet="aspnet_UsersInRoles" />
+    </AssociationSet>
+    <AssociationSet Name="FK_FilesDownloadAuditTrails_aspnet_Users" Association="Self.FK_FilesDownloadAuditTrails_aspnet_Users">
+      <End Role="aspnet_Users" EntitySet="aspnet_Users" />
+      <End Role="FilesDownloadAuditTrails" EntitySet="FilesDownloadAuditTrails" />
+    </AssociationSet>
+    <AssociationSet Name="FK_FilesDownloadAuditTrails_Files" Association="Self.FK_FilesDownloadAuditTrails_Files">
+      <End Role="Files" EntitySet="Files" />
+      <End Role="FilesDownloadAuditTrails" EntitySet="FilesDownloadAuditTrails" />
+    </AssociationSet>
+    <AssociationSet Name="FK_RolesFilesAuthorizations_aspnet_Roles" Association="Self.FK_RolesFilesAuthorizations_aspnet_Roles">
+      <End Role="aspnet_Roles" EntitySet="aspnet_Roles" />
+      <End Role="RolesFilesAuthorizations" EntitySet="RolesFilesAuthorizations" />
+    </AssociationSet>
+    <AssociationSet Name="FK_RolesFilesAuthorizations_Files" Association="Self.FK_RolesFilesAuthorizations_Files">
+      <End Role="Files" EntitySet="Files" />
+      <End Role="RolesFilesAuthorizations" EntitySet="RolesFilesAuthorizations" />
+    </AssociationSet>
+    <AssociationSet Name="FK_UserLoginAuditTrails_aspnet_Users" Association="Self.FK_UserLoginAuditTrails_aspnet_Users">
+      <End Role="aspnet_Users" EntitySet="aspnet_Users" />
+      <End Role="UserLoginAuditTrails" EntitySet="UserLoginAuditTrails" />
+    </AssociationSet>
+    <AssociationSet Name="FK_UsersFilesAuthorizations_aspnet_Users" Association="Self.FK_UsersFilesAuthorizations_aspnet_Users">
+      <End Role="aspnet_Users" EntitySet="aspnet_Users" />
+      <End Role="UsersFilesAuthorizations" EntitySet="UsersFilesAuthorizations" />
+    </AssociationSet>
+    <AssociationSet Name="FK_UsersFilesAuthorizations_Files" Association="Self.FK_UsersFilesAuthorizations_Files">
+      <End Role="Files" EntitySet="Files" />
+      <End Role="UsersFilesAuthorizations" EntitySet="UsersFilesAuthorizations" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>

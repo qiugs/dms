@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="d9b424cef6974bba956fb53d5f355a2a" Name="Diagram1" ZoomLevel="60">
+        <EntityTypeShape EntityType="DockerDBModel.aspnet_Profile" Width="1.5" PointX="10.5" PointY="18.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="DockerDBModel.aspnet_Roles" Width="1.5" PointX="3" PointY="11.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="DockerDBModel.aspnet_Users" Width="1.5" PointX="8.25" PointY="11.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="DockerDBModel.File" Width="1.5" PointX="5.25" PointY="11.125" IsExpanded="true" />
+        <AssociationConnector Association="DockerDBModel.FK__aspnet_Pr__UserI__38996AB5" ManuallyRouted="false" />
+        <AssociationConnector Association="DockerDBModel.UsersFilesAuthorizations" ManuallyRouted="false" />
+        <AssociationConnector Association="DockerDBModel.RolesFilesAuthorizations" />
+        <AssociationConnector Association="DockerDBModel.aspnet_UsersInRoles" ManuallyRouted="false" >
+        </AssociationConnector>
+        <EntityTypeShape EntityType="DockerDBModel.aspnet_Membership" Width="1.5" PointX="10.5" PointY="10.625" />
+        <AssociationConnector Association="DockerDBModel.FK__aspnet_Me__UserI__22AA2996" />
+        <EntityTypeShape EntityType="DockerDBModel.UserLoginAuditTrail" Width="1.5" PointX="0.75" PointY="0.75" />
+        <EntityTypeShape EntityType="DockerDBModel.FilesDownloadAuditTrail" Width="1.5" PointX="2.75" PointY="0.75" />
+        <EntityTypeShape EntityType="DockerDBModel.DCE_Keywords" Width="1.5" PointX="9.75" PointY="6.375" />
+        <EntityTypeShape EntityType="DockerDBModel.aspnet_Applications" Width="1.5" PointX="0.75" PointY="12.75" />
+        <AssociationConnector Association="DockerDBModel.FK__aspnet_Me__Appli__21B6055D" />
+        <AssociationConnector Association="DockerDBModel.FK__aspnet_Ro__Appli__440B1D61" ManuallyRouted="false" >
+        </AssociationConnector>
+        <AssociationConnector Association="DockerDBModel.FK__aspnet_Us__Appli__0DAF0CB0" />
+        <EntityTypeShape EntityType="DockerDBModel.OCRFileExtension" Width="1.5" PointX="0.75" PointY="3.75" />
+        <EntityTypeShape EntityType="DockerDBModel.FileBeenOCR" Width="1.5" PointX="4.5" PointY="16.5" />
+        <AssociationConnector Association="DockerDBModel.FK_FileBeenOCR_File" />
+        <EntityTypeShape EntityType="DockerDBModel.aspnet_Paths" Width="1.5" PointX="2.375" PointY="16.5" />
+        <AssociationConnector Association="DockerDBModel.FK__aspnet_Pa__Appli__5AEE82B9" />
+        <EntityTypeShape EntityType="DockerDBModel.DCE_Templates" Width="1.5" PointX="7.5" PointY="5.75" />
+        <AssociationConnector Association="DockerDBModel.FK_DCEKeywords_DCETemplates" />
+        <AssociationConnector Association="DockerDBModel.FK_DCETemplates_Files" />
+        <EntityTypeShape EntityType="DockerDBModel.RoleProfile" Width="1.5" PointX="13.5" PointY="11.875" />
+        <AssociationConnector Association="DockerDBModel.FK_RoleProfile_AspnetRoles" />
+        <AssociationConnector Association="DockerDBModel.FK_RoleProfile_AspnetUsers" />
+        <EntityTypeShape EntityType="DockerDBModel.FeatureProfile" Width="1.5" PointX="11.25" PointY="3.125" />
+        <EntityTypeShape EntityType="DockerDBModel.FeatureAccessProfile" Width="1.5" PointX="13.5" PointY="7.875" />
+        <AssociationConnector Association="DockerDBModel.FK_FeatureAccessProfile_AspnetRoles" />
+        <AssociationConnector Association="DockerDBModel.FK_FeatureAccessProfile_AspnetUsers" />
+        <AssociationConnector Association="DockerDBModel.FK_FeatureAccessProfile_FeatureProfile" />
+        <EntityTypeShape EntityType="DockerDBModel.TagsOnFile" Width="1.5" PointX="6.375" PointY="16.5" />
+        <AssociationConnector Association="DockerDBModel.FK_TagsOnFile_File" />
+        </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

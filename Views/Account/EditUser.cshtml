@@ -1,0 +1,178 @@
+﻿@model RMA_Docker.Models.UserEditModel
+
+@{
+    ViewBag.Title = "Edit User";
+}
+
+<nav class="navbar navbar-expand-lg">
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="nav navbar-nav">
+            <li class="nav-item">
+                <h4 class="text-info">Account - Edit User : @Html.Label(Model.UserName) </h4>
+                <h6></h6>
+            </li>
+        </ul>
+    </div>
+</nav>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+<div class="form-horizontal">
+    <hr />
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    @if (TempData["EditUserUpdateSuccess"] != null)
+    {
+        <div class="RegisterSuccess text-info">
+            <ul>
+                <li>@TempData["EditUserUpdateSuccess"].ToString()</li>
+            </ul>
+        </div>
+    }
+    @if (TempData["ResettedPassword"] != null)
+    {
+        <div class="RegisterSuccess text-info">
+            <ul>
+                <li>New password is @TempData["ResettedPassword"].ToString()</li>
+            </ul>
+        </div>
+    }
+    <div class="form-group">
+        @Html.LabelFor(model => model.UserName, htmlAttributes: new { @class = "control-label col-md-auto" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.UserName, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+            @Html.ValidationMessageFor(model => model.UserName, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.Email, htmlAttributes: new { @class = "control-label col-md-auto" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.PhoneAlias, htmlAttributes: new { @class = "control-label col-md-auto" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.PhoneAlias, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.PhoneAlias, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.PhonePIN, htmlAttributes: new { @class = "control-label col-md-auto" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.PhonePIN, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.PhonePIN, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.CreationDate, htmlAttributes: new { @class = "control-label col-md-auto" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.CreationDate, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+            @Html.ValidationMessageFor(model => model.CreationDate, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.IsApproved, htmlAttributes: new { @class = "control-label col-md-auto" })
+        <div class="col-md-10">
+            <div class="checkbox">
+                @Html.EditorFor(model => model.IsApproved)
+                @Html.ValidationMessageFor(model => model.IsApproved, "", new { @class = "text-danger" })
+            </div>
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.LastLoginDate, htmlAttributes: new { @class = "control-label col-md-auto" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.LastLoginDate, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+            @Html.ValidationMessageFor(model => model.LastLoginDate, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.IsLockedOut, htmlAttributes: new { @class = "control-label col-md-auto" })
+        <div class="col-md-10">
+            <div class="checkbox">
+                @Html.EditorFor(model => model.IsLockedOut)
+                @Html.ValidationMessageFor(model => model.IsLockedOut, "", new { @class = "text-danger" })
+            </div>
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.LastLockoutDate, htmlAttributes: new { @class = "control-label col-md-auto" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.LastLockoutDate, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+            @Html.ValidationMessageFor(model => model.LastLockoutDate, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.LastPasswordChangedDate, htmlAttributes: new { @class = "control-label col-md-auto" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.LastPasswordChangedDate, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+            @Html.ValidationMessageFor(model => model.LastPasswordChangedDate, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.Password, htmlAttributes: new { @class = "control-label col-md-auto" })
+        <div class="col-md-5">
+            @Html.ActionLink("Change Password", "ChangePassword", new { userName = Model.UserName }, new { @class = "form-control btn-outline-warning" })
+            @Html.ActionLink("Reset Password", "ResetPassword", new { userName = Model.UserName }, new { @class = "form-control btn-outline-warning" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.ExpiredDate, htmlAttributes: new { @class = "control-label col-md-auto" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.ExpiredDate, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.ExpiredDate, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.GetRolesForUser, htmlAttributes: new { @class = "control-label col-md-auto" })
+        <div class="col-md-10">
+            @foreach (var role in Model.GetRolesForUser) {
+                <span class="border border-success rounded p-1 mr-1 text-black-50"> @role </span>
+            }
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.Comment, htmlAttributes: new { @class = "control-label col-md-auto" })
+        <div class="col-md-10">
+            @Html.TextAreaFor(model => model.Comment, new { @class = "form-control" })
+            @Html.ValidationMessageFor(model => model.Comment, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10 mt-5">
+            <input type="submit" value="Save" class="btn btn-outline-success" />
+            @Html.ActionLink("Back to Previous", "ListUsers", null, new { @class = "btn btn-outline-secondary ml-2" })
+        </div>
+    </div>
+</div>
+}
+
+<!-- DateTime Picker JS -->
+<script type="text/javascript" src="~/Scripts/jquery.datetimepicker.js"></script>
+
+<script>
+    $(function () {
+        /** resource from https://xdsoft.net/jqplugins/datetimepicker/ **/
+        $('#ExpiredDate').datetimepicker({
+            format: 'd/m/Y H:m',
+            maxTime: '23:59',
+            minTime: '00:00'
+        });
+    });
+</script>

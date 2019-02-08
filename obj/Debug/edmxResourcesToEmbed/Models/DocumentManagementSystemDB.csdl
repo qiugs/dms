@@ -1,0 +1,174 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="OOTSDBModel" Alias="Self" xmlns="http://schemas.microsoft.com/ado/2009/11/edm" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation">
+  <EntityContainer Name="OOTSDBEntities" annotation:LazyLoadingEnabled="true" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation">
+    <EntitySet Name="aspnet_Roles" EntityType="OOTSDBModel.aspnet_Roles" />
+    <EntitySet Name="aspnet_Users" EntityType="OOTSDBModel.aspnet_Users" />
+    <AssociationSet Name="aspnet_UsersInRoles" Association="OOTSDBModel.aspnet_UsersInRoles">
+      <End Role="aspnet_Roles" EntitySet="aspnet_Roles" />
+      <End Role="aspnet_Users" EntitySet="aspnet_Users" />
+    </AssociationSet>
+    <EntitySet Name="UserLoginAuditTrails" EntityType="OOTSDBModel.UserLoginAuditTrail" />
+    <AssociationSet Name="FK_UserLoginAuditTrails_aspnet_Users" Association="OOTSDBModel.FK_UserLoginAuditTrails_aspnet_Users">
+      <End Role="aspnet_Users" EntitySet="aspnet_Users" />
+      <End Role="UserLoginAuditTrail" EntitySet="UserLoginAuditTrails" />
+    </AssociationSet>
+    <EntitySet Name="FilesDownloadAuditTrails" EntityType="OOTSDBModel.FilesDownloadAuditTrail" />
+    <AssociationSet Name="FK_FilesDownloadAuditTrails_aspnet_Users" Association="OOTSDBModel.FK_FilesDownloadAuditTrails_aspnet_Users">
+      <End Role="aspnet_Users" EntitySet="aspnet_Users" />
+      <End Role="FilesDownloadAuditTrail" EntitySet="FilesDownloadAuditTrails" />
+    </AssociationSet>
+    <EntitySet Name="aspnet_Profile" EntityType="OOTSDBModel.aspnet_Profile" />
+    <AssociationSet Name="FK__aspnet_Pr__UserI__38996AB5" Association="OOTSDBModel.FK__aspnet_Pr__UserI__38996AB5">
+      <End Role="aspnet_Users" EntitySet="aspnet_Users" />
+      <End Role="aspnet_Profile" EntitySet="aspnet_Profile" />
+    </AssociationSet>
+    <EntitySet Name="Files" EntityType="OOTSDBModel.File" />
+    <AssociationSet Name="FK_FilesDownloadAuditTrails_Files" Association="OOTSDBModel.FK_FilesDownloadAuditTrails_Files">
+      <End Role="File" EntitySet="Files" />
+      <End Role="FilesDownloadAuditTrail" EntitySet="FilesDownloadAuditTrails" />
+    </AssociationSet>
+    <AssociationSet Name="RolesFilesAuthorizations" Association="OOTSDBModel.RolesFilesAuthorizations">
+      <End Role="aspnet_Roles" EntitySet="aspnet_Roles" />
+      <End Role="File" EntitySet="Files" />
+    </AssociationSet>
+    <AssociationSet Name="UsersFilesAuthorizations" Association="OOTSDBModel.UsersFilesAuthorizations">
+      <End Role="aspnet_Users" EntitySet="aspnet_Users" />
+      <End Role="File" EntitySet="Files" />
+    </AssociationSet>
+  </EntityContainer>
+  <EntityType Name="aspnet_Roles">
+    <Key>
+      <PropertyRef Name="RoleId" />
+    </Key>
+    <Property Name="ApplicationId" Type="Guid" Nullable="false" />
+    <Property Name="RoleId" Type="Guid" Nullable="false" />
+    <Property Name="RoleName" Type="String" Nullable="false" MaxLength="256" Unicode="true" FixedLength="false" />
+    <Property Name="LoweredRoleName" Type="String" Nullable="false" MaxLength="256" Unicode="true" FixedLength="false" />
+    <Property Name="Description" Type="String" MaxLength="256" Unicode="true" FixedLength="false" />
+    <NavigationProperty Name="aspnet_Users" Relationship="OOTSDBModel.aspnet_UsersInRoles" FromRole="aspnet_Roles" ToRole="aspnet_Users" />
+    <NavigationProperty Name="Files" Relationship="OOTSDBModel.RolesFilesAuthorizations" FromRole="aspnet_Roles" ToRole="File" />
+  </EntityType>
+  <EntityType Name="aspnet_Users">
+    <Key>
+      <PropertyRef Name="UserId" />
+    </Key>
+    <Property Name="ApplicationId" Type="Guid" Nullable="false" />
+    <Property Name="UserId" Type="Guid" Nullable="false" />
+    <Property Name="UserName" Type="String" Nullable="false" MaxLength="256" Unicode="true" FixedLength="false" />
+    <Property Name="LoweredUserName" Type="String" Nullable="false" MaxLength="256" Unicode="true" FixedLength="false" />
+    <Property Name="MobileAlias" Type="String" MaxLength="16" Unicode="true" FixedLength="false" />
+    <Property Name="IsAnonymous" Type="Boolean" Nullable="false" />
+    <Property Name="LastActivityDate" Type="DateTime" Nullable="false" Precision="3" />
+    <NavigationProperty Name="aspnet_Roles" Relationship="OOTSDBModel.aspnet_UsersInRoles" FromRole="aspnet_Users" ToRole="aspnet_Roles" />
+    <NavigationProperty Name="UserLoginAuditTrails" Relationship="OOTSDBModel.FK_UserLoginAuditTrails_aspnet_Users" FromRole="aspnet_Users" ToRole="UserLoginAuditTrail" />
+    <NavigationProperty Name="FilesDownloadAuditTrails" Relationship="OOTSDBModel.FK_FilesDownloadAuditTrails_aspnet_Users" FromRole="aspnet_Users" ToRole="FilesDownloadAuditTrail" />
+    <NavigationProperty Name="aspnet_Profile" Relationship="OOTSDBModel.FK__aspnet_Pr__UserI__38996AB5" FromRole="aspnet_Users" ToRole="aspnet_Profile" />
+    <NavigationProperty Name="Files" Relationship="OOTSDBModel.UsersFilesAuthorizations" FromRole="aspnet_Users" ToRole="File" />
+  </EntityType>
+  <Association Name="aspnet_UsersInRoles">
+    <End Role="aspnet_Roles" Type="OOTSDBModel.aspnet_Roles" Multiplicity="*" />
+    <End Role="aspnet_Users" Type="OOTSDBModel.aspnet_Users" Multiplicity="*" />
+  </Association>
+  <EntityType Name="UserLoginAuditTrail">
+    <Key>
+      <PropertyRef Name="UserID" />
+      <PropertyRef Name="DateTimeLogged" />
+    </Key>
+    <Property Type="Guid" Name="UserID" Nullable="false" />
+    <Property Type="DateTime" Name="DateTimeLogged" Nullable="false" Precision="3" />
+    <NavigationProperty Name="aspnet_Users" Relationship="OOTSDBModel.FK_UserLoginAuditTrails_aspnet_Users" FromRole="UserLoginAuditTrail" ToRole="aspnet_Users" />
+  </EntityType>
+  <Association Name="FK_UserLoginAuditTrails_aspnet_Users">
+    <End Type="OOTSDBModel.aspnet_Users" Role="aspnet_Users" Multiplicity="1" />
+    <End Type="OOTSDBModel.UserLoginAuditTrail" Role="UserLoginAuditTrail" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="aspnet_Users">
+        <PropertyRef Name="UserId" />
+      </Principal>
+      <Dependent Role="UserLoginAuditTrail">
+        <PropertyRef Name="UserID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityType Name="FilesDownloadAuditTrail">
+    <Key>
+      <PropertyRef Name="FileID" />
+      <PropertyRef Name="UserID" />
+      <PropertyRef Name="DateTimeDownloaded" />
+    </Key>
+    <Property Type="Guid" Name="FileID" Nullable="false" />
+    <Property Type="Guid" Name="UserID" Nullable="false" />
+    <Property Type="DateTime" Name="DateTimeDownloaded" Nullable="false" Precision="3" />
+    <NavigationProperty Name="aspnet_Users" Relationship="OOTSDBModel.FK_FilesDownloadAuditTrails_aspnet_Users" FromRole="FilesDownloadAuditTrail" ToRole="aspnet_Users" />
+    <NavigationProperty Name="File" Relationship="OOTSDBModel.FK_FilesDownloadAuditTrails_Files" FromRole="FilesDownloadAuditTrail" ToRole="File" />
+  </EntityType>
+  <Association Name="FK_FilesDownloadAuditTrails_aspnet_Users">
+    <End Type="OOTSDBModel.aspnet_Users" Role="aspnet_Users" Multiplicity="1" />
+    <End Type="OOTSDBModel.FilesDownloadAuditTrail" Role="FilesDownloadAuditTrail" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="aspnet_Users">
+        <PropertyRef Name="UserId" />
+      </Principal>
+      <Dependent Role="FilesDownloadAuditTrail">
+        <PropertyRef Name="UserID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityType Name="aspnet_Profile">
+    <Key>
+      <PropertyRef Name="UserId" />
+    </Key>
+    <Property Type="Guid" Name="UserId" Nullable="false" />
+    <Property Type="String" Name="PropertyNames" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="PropertyValuesString" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Type="Binary" Name="PropertyValuesBinary" Nullable="false" MaxLength="Max" FixedLength="false" />
+    <Property Type="DateTime" Name="LastUpdatedDate" Nullable="false" Precision="3" />
+    <NavigationProperty Name="aspnet_Users" Relationship="OOTSDBModel.FK__aspnet_Pr__UserI__38996AB5" FromRole="aspnet_Profile" ToRole="aspnet_Users" />
+  </EntityType>
+  <Association Name="FK__aspnet_Pr__UserI__38996AB5">
+    <End Type="OOTSDBModel.aspnet_Users" Role="aspnet_Users" Multiplicity="1" />
+    <End Type="OOTSDBModel.aspnet_Profile" Role="aspnet_Profile" Multiplicity="0..1" />
+    <ReferentialConstraint>
+      <Principal Role="aspnet_Users">
+        <PropertyRef Name="UserId" />
+      </Principal>
+      <Dependent Role="aspnet_Profile">
+        <PropertyRef Name="UserId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityType Name="File">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Type="Guid" Name="ID" Nullable="false" />
+    <Property Type="String" Name="Name" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="VirtualPath" Nullable="false" MaxLength="200" FixedLength="false" Unicode="true" />
+    <Property Type="DateTime" Name="DateTimeUploaded" Nullable="false" Precision="3" />
+    <Property Type="String" Name="NiceNameOrAreaName" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="Description" MaxLength="500" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="FilesDownloadAuditTrails" Relationship="OOTSDBModel.FK_FilesDownloadAuditTrails_Files" FromRole="File" ToRole="FilesDownloadAuditTrail" />
+    <NavigationProperty Name="aspnet_Roles" Relationship="OOTSDBModel.RolesFilesAuthorizations" FromRole="File" ToRole="aspnet_Roles" />
+    <NavigationProperty Name="aspnet_Users" Relationship="OOTSDBModel.UsersFilesAuthorizations" FromRole="File" ToRole="aspnet_Users" />
+  </EntityType>
+  <Association Name="FK_FilesDownloadAuditTrails_Files">
+    <End Type="OOTSDBModel.File" Role="File" Multiplicity="1" />
+    <End Type="OOTSDBModel.FilesDownloadAuditTrail" Role="FilesDownloadAuditTrail" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="File">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="FilesDownloadAuditTrail">
+        <PropertyRef Name="FileID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="RolesFilesAuthorizations">
+    <End Type="OOTSDBModel.aspnet_Roles" Role="aspnet_Roles" Multiplicity="*" />
+    <End Type="OOTSDBModel.File" Role="File" Multiplicity="*" />
+  </Association>
+  <Association Name="UsersFilesAuthorizations">
+    <End Type="OOTSDBModel.aspnet_Users" Role="aspnet_Users" Multiplicity="*" />
+    <End Type="OOTSDBModel.File" Role="File" Multiplicity="*" />
+  </Association>
+</Schema>

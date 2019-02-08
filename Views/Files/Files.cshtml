@@ -1,0 +1,410 @@
+﻿@model RMA_Docker.Models.FileModel
+@{
+    ViewBag.Title = "Document Management System";
+}
+
+<nav class="navbar navbar-expand-lg">
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="nav navbar-nav">
+            <li class="nav-item">
+                <h4 class="text-info">@ViewBag.Title</h4>
+                <h6></h6>
+            </li>
+        </ul>
+    </div>
+</nav>
+
+<div>
+    <hr />
+    <div class="files_panel">
+        <div class="file-manager">
+            <div class="fixed-fluid row">
+                <div class="col-md-2 col-sm-2">
+                    <p class="">@Html.ActionLink("Files", "Files", null, new { @class = "small" })</p>
+                    <p class="text-dark font-weight-bold text-uppercase small border-top mt-4 pt-2">Tags</p>
+                    <ul class="list-inline">
+                        @foreach (String tag in Model.Tags) {
+                            <li class="list-inline-item text-black-50 small border rounded mr-0 mt-1 p-1">
+                                <a href="@Url.Action("SearchTags", new { virtualPath=Model.VirtualPath, tagName=tag})">@tag</a>
+                            </li>
+                        }
+                    </ul>
+                </div>
+
+                <div class="col-md-10 col-sm-10 border rounded" style="min-height:300px;">
+                    <div class="file-panel">
+                        <div class="file-toolbar bord-btm">
+                            <div class="btn-file-toolbar">
+                                <a class="btn btn-icon add-tooltip text-muted" href="@Url.Action("Files")" data-original-title="Home" data-toggle="tooltip"><i class="fa-1x5 demo-pli-home"></i></a>
+                                    @if (!Model.IsSearchResult) {
+                                        <a class="btn btn-icon add-tooltip text-muted subfolderRefresh" href="@Url.Action("SubFolder", new { virtualPath=Model.VirtualPath })"
+                                           data-original-title="Refresh" data-toggle="tooltip" style="position: relative;display: inline-block;">
+                                            <i class="fa-1x5 demo-pli-reload-3"></i>
+                                        </a>
+                                    } else {
+                                        <a class="btn btn-icon add-tooltip text-muted subfolderRefresh" href="#" data-original-title="Refresh" data-toggle="tooltip" style="position:relative;display: inline-block;">
+                                            <i class="fa-1x5 demo-pli-reload-3"></i>
+                                            <i class="fa-1x5 demo-pli-cross" style="position:absolute;left:6px;bottom:6px;"></i>
+                                        </a>
+                                    }
+                            </div>
+                            <div class="btn-file-toolbar" id="subfolderNewFoldernUpload">
+                                @if (!Model.IsSearchResult) {
+                                    <span data-toggle="modal" data-target="#AddFolder">
+                                        <a class="btn btn-icon add-tooltip text-primary" href="#" data-original-title="New Folder" data-toggle="tooltip">
+                                            <i class="fa-1x5 demo-pli-folder"></i>
+                                        </a>
+                                    </span>
+                                    <span data-toggle="modal" data-target="#UploadFile">
+                                        <a class="btn btn-icon add-tooltip text-primary" href="#" data-original-title="Upload File" data-toggle="tooltip">
+                                            <i class="fa-1x5 demo-pli-upload-to-cloud"></i>
+                                        </a>
+                                    </span>
+                                }
+                            </div>
+                            <div class="btn-file-toolbar pull-right" style="border-left: 0px !important;">
+                                <div class="input-group">
+                                    <input type="text" id="_inputSearchFile" class="form-control border-top-0 border-left-0 border-right-0 rounded-0" placeholder="Search under this folder ..." >
+                                    <div class="input-group-append">
+                                        <a id="_inputSearchFileButton" href="@Url.Action("SearchFile", new { virtualPath=Model.VirtualPath, searchValue="_searchValueFromInputText" })" class="btn btn-icon" onclick="return searchFileOnDMS()" ><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAIDSURBVEhLxZVBSxtBFMeDeiqCFP0ILailSnay9SL4BUQUWsWb2F700IM91hLEetCTYLKzmxa8Sj+Eni1URaV05yUHD4XSVvCmttX0/3YeYkzWrBL0B0N2/++9eW/ezGxS90qfLj52fDOV8c17HvycztEjMd+eTFByMeFGxqdyzaHNuuMVlbjfDKXNy4ymUzuZIfwuujqc4KE0LcFWtEng45lJCUuGCmgY1Z0j+I/jh68HshstYrqANeXTDPtEvh4Niel6nnoHD1HhIQe5ujgicixY6XP2RbLfKii1iRwPNvCd9PijSHXB5Ksco/xwVqR4UP02O7sFeiJSXdL5Uo/dD/NFpBiy5SZU8xd9/SlKYhDzi/eD5xCpGu6/XarZEykx2It9juU5RKrmxadyMxz/YfwQKTG8ahzns1onrgL0cTdaRfCtU6S6pPNhl1057YgUD5zm7IaRFqkuKOpDlEDTW5HiQeUdCDjiVjmeGRQ5Fr5gtq106K58bRf5epQOx6PLo82x49OrmicDmv0A0omt3qyJJRlIMM2VSTBOiMm6mkbxPsbPVosu5KWPH81LeDJw9fsRuFk1kQwk+YwjXajQb5qEeabDXmz+DMYyql9B295gOGLmO7BQkQT/GWJqHFeT8LuYGsedJ0FLt1Tw/YGYGgcn4ckT34vb0J3bb5XHuyCV+g8aBXkSpXrpwAAAAABJRU5ErkJggg=="></a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <ul id="demo-mail-list" class="file-list">
+                            @if (!Model.IsRootDir) {
+                                <li>
+                                    <div class="file-attach-icon"></div>
+                                    <a href="@Url.Action("SubFolder", new { virtualPath=Model.parentVirtualPath })" class="file-details">
+                                        <div class="media-block">
+                                            <div class="media-left"><i class="demo-psi-folder text-muted"></i></div>
+                                            <div class="media-body">
+                                                <p class="file-name single-line"> ... </p>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </li>
+                            }
+
+                            @foreach (RMA_Docker.Models.FileModel currentFile in Model.CurrentFolderFiles) {
+                                if (currentFile.VirtualPath != null) {
+                                <li>
+                                    <div class="file-settings">
+                                        @if (currentFile.AllowToOCR && !currentFile.IsOCR) {
+                                            <a class="text-muted add-tooltip" href="#" data-original-title="To OCR this file" data-toggle="tooltip" id="fileToOCR" data-path-virtual="@currentFile.VirtualPath">
+                                                <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAASCAYAAABWzo5XAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAGeSURBVDhPtVQ9LwRRFB2yhY8IYomvEBKlXhSInQ92Nxr+gMafQEaxvDc7RNQKolRqiGbD7nwsW6g1SEhIiERJGOeOt6yxiZWMk0xm7rvnnPvenfeeNKpnIjF20i8bzkBSL0SlCkFc0pCWPCSZZ3tUZm+o3JqVuTskeL+CuKQhLXlIinnUpxrWnMj/GaQlDynBss1wrHgmQZCWPET4D1BMq03XvWoR+kiuFqJobh01VUuddshGrlPyvCqR/glqnMacR5U7uxRDWKNxZ09lziXGlzTmJhB7yF9r3HbJ3BeWIp7Ot6vcfp3gbjfIL3HT6oV4Ac+VYp7VE6doNMnswQ9Da9gXl0Jh7jgqP9E3xDcas2WQ91F90ycAJTNKg3Mn80KjSH0haKQwawRmh+WMMH6ONuyI4e9IpOwuEN5oiXg/U0NhMo/lXgSXhkJjfhuWj1t9cRAgbKOJ9yBtUTxl5BowywOM3cJgsWhE+wbcB+SmfWE5xFbyLeLzE1R5Zs2upb9EZ4u2B61gdD3TJCghIrQjEtqhpSsglGsknIstE3kH50QIycFnxYMAAAAASUVORK5CYII=">
+                                            </a>
+                                        }
+                                        @if (!Model.IsSearchResult) {
+                                            <span data-toggle="modal" class="open_TagsMetadata" data-target="#FileTagsMetadata" data-path-virtual="@currentFile.VirtualPath">
+                                                <a class="text-muted add-tooltip" href="#" data-original-title="Tags Metadata" data-toggle="tooltip" id="tagsMetadata"><i class="fa-lg demo-pli-tag-5"></i></a>
+                                            </span>
+                                        }
+                                        @if (!currentFile.IsUserFolder) {
+                                            <span data-toggle="modal" class="open_RenameFileFolder" data-target="#RenameFileFolder" data-path-virtual="@currentFile.VirtualPath" data-file-name="@currentFile.Name">
+                                                <a class="text-muted add-tooltip" href="#" data-original-title="Rename" data-toggle="tooltip" id="filesRename">
+                                                    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAASCAYAAABWzo5XAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAACWSURBVDhPY6AnEAbiTUC8G4ibgJgHSoP4G4CYF4hJBolA/BJKUwyOQmmKwWEojQGWAvF+IAb5mRDmBuKbaGKngbgdiMEG8YMYRAJ0F9kA8ahBqID2BvUD8V4gRo5SXBhb9IMMLgVikgG6i8gGZ6A02YATiEG5/hoQV0L5JAFQsbEeiDcCcQIQM0FpUNECEgfJUwswMAAAUaw0L1OdaCsAAAAASUVORK5CYII=">
+                                                </a>
+                                            </span>
+                                            <a class="text-muted add-tooltip" href="#" data-original-title="Delete" data-toggle="tooltip" id="filesDelete" data-path-virtual="@currentFile.VirtualPath">
+                                                <i class="fa-lg demo-pli-recycling"></i>
+                                            </a>
+                                        }
+                                        <a class="text-muted add-tooltip" href="#" data-original-title="Download" data-toggle="tooltip" id="filesDownload" data-path-virtual="@currentFile.VirtualPath">
+                                            <i class="fa-lg demo-pli-download-from-cloud"></i>
+                                        </a>
+                                    </div>
+                                    @if (currentFile.IsFolder) {
+                                        <div class="file-attach-icon"></div>
+                                        <a href='@Url.Action("SubFolder", new { virtualPath=currentFile.VirtualPath })' class="file-details">
+                                            <div class="media-block">
+                                                <div class="media-left">
+                                                    <i class="@currentFile.Category.icon"></i>
+                                                    @if (currentFile.IsUserFolder) { <i class="demo-psi-lock-user text-warning" style="font-size:.7em;position:absolute;left:3px;bottom:15px;"></i> }
+                                                </div>
+                                                <div class="media-body">
+                                                    <p class="file-name">@currentFile.Name</p>
+                                                    <span class="file-infos text-black-50">Modified @currentFile.Modified</span>
+                                                </div>
+                                            </div>
+                                        </a>
+                                    } else {
+                                        <div class="file-attach-icon"></div>
+                                        <a href="#" class="file-details" style="cursor:initial;">
+                                            <div class="media-block">
+                                                <div class="media-left"><i class="@currentFile.Category.icon"></i></div>
+                                                <div class="media-body">
+                                                    <p class="file-name">@currentFile.Name</p>
+                                                    @if (currentFile.IsOCR) { <span class="file-infos text-black-50">Modified @currentFile.Modified | DocType @currentFile.OcrDocType</span> } 
+                                                    else { <span class="file-infos text-black-50">Modified @currentFile.Modified</span> }
+                                                </div>
+                                            </div>
+                                        </a>
+                                    }
+                                </li>
+                                }
+                            }
+
+                            @foreach (RMA_Docker.Models.FileModel commonFile in Model.CommonFolderFiles) {
+                                if (commonFile.VirtualPath != null) {
+                                <li>
+                                    <div class="file-settings">
+                                        <a class="text-muted add-tooltip" href="#" data-original-title="Download" data-toggle="tooltip" id="filesDownload" data-path-virtual="@commonFile.VirtualPath">
+                                            <i class="fa-lg demo-pli-download-from-cloud"></i>
+                                        </a>
+                                    </div>
+                                        @if (commonFile.IsFolder) {
+                                        <div class="file-attach-icon"></div>
+                                        <a href='@Url.Action("SubFolder", new { virtualPath=commonFile.VirtualPath })' class="file-details">
+                                            <div class="media-block">
+                                                <div class="media-left">
+                                                    <i class="@commonFile.Category.icon"></i>
+                                                    <i class="demo-psi-male-female" style="font-size:.7em;position:absolute;left:3px;bottom:15px;color:#1a53ff;"></i>
+                                                </div>
+                                                <div class="media-body">
+                                                    <p class="file-name">@commonFile.Name</p>
+                                                    <span class="file-infos text-black-50">Modified @commonFile.Modified</span>
+                                                </div>
+                                            </div>
+                                        </a>
+                                        }
+                                </li>
+                                }
+                            }
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="AddFolder" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title text-muted">Add New Folder</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body row">
+                @if (!Request.IsAuthenticated) {
+                    <input type="hidden" name="userName" value="" />
+                    <script>
+                        $(function () { $("#modalAddFolderMsg").html("<span class=\"small text-danger mb-4 pl-2\">User is not logged in, created folder will be available for Admin user only.<\/span>"); });
+                    </script>
+                }
+                <span class="text-black-50 col-4 col-form-label">Folder Name :</span>
+                <div class="col-8">
+                    <input id="inputNewFolderName" class="form-control" name="folderName" value="" placeholder="New Folder Name" />
+                </div>
+            </div>
+            <span id="modalAddFolderMsg"></span>
+            <div class="modal-footer">
+                <input type="submit" value="Create" class="btn btn-outline-success" onclick="return createNewFolderCheckInput()" />
+                <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="UploadFile" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title text-muted">Upload New File</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body row">
+                @if (!Request.IsAuthenticated) {
+                    <input type="hidden" name="userName" value="" />
+                    <script>
+                        $(function () { $("#modalUploadFileMsg").html("<span class=\"small text-danger mb-4 pl-2\">User is not logged in, uploaded file will be available for Admin user only.<\/span>"); });
+                    </script>
+                }
+                <div class="row mb-1 ml-1">
+                    <span class="text-black-50 col-4 col-form-label">Attachment :</span>
+                    <div class="col-8">
+                        <input type="file" id="uploadNewFileName" class="form-control-file" name="fileUpload" style="line-height:38px;" />
+                    </div>
+                </div>
+                <div class="row mb-1 ml-1">
+                    <span class="text-black-50 col-4 col-form-label">Nice Name :</span>
+                    <div class="col-8">
+                        <input id="uploadNewFileNiceName" class="form-control" name="fileNiceName" value="" />
+                    </div>
+                </div>
+                <div class="row mb-1 ml-1">
+                    <span class="text-black-50 col-4 col-form-label">Description :</span>
+                    <div class="col-8">
+                        <input id="uploadNewFileDesc" class="form-control" name="fileDesc" value="" maxlength="200" />
+                    </div>
+                </div>
+            </div>
+            <span id="modalUploadFileMsg"></span>
+            <div class="modal-footer">
+                <input type="submit" value="Upload" class="btn btn-outline-success" onclick="return uploadNewFileCheckInput()" />
+                <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="RenameFileFolder" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title text-muted">Rename</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body row">
+                <span class="text-black-50 col-4 col-form-label">Rename as :</span>
+                <div class="col-8">
+                    <input id="inputRenameFileFolder" class="form-control" name="RenameFileFolder" value="" />
+                </div>
+            </div>
+            <span id="modalRenameFileFolderMsg"></span>
+            <div class="modal-footer">
+                <input type="submit" value="Save" class="btn btn-outline-success" id="modalRenameFileFolder" />
+                <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="FileTagsMetadata" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title text-muted">Tags Metadata</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <span class="text-black-50 col-3 col-form-label pr-1">New Tag :</span>
+                    <div class="col-7">
+                        <input id="inputTagValue" class="form-control" value="" />
+                    </div>
+                    <div class="col-2">
+                        <button id="addTagValue" type="button" class="btn btn-outline-success">+</button>
+                    </div>
+                </div>
+                <span id="modalTagsMetadataMsg"></span>
+                <input type="hidden" id="modalTagVirtualPath" value="" />
+                <hr />
+                <div class="row">
+                    <div id="modalBodyTags" class="col-12 d-inline-block"></div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <span class="text-black-50 small font-italic">Please save to update.</span>
+                <input type="button" value="Save" class="btn btn-outline-success" onclick="saveModalTagsMetadata()" data-dismiss="modal"/>
+                <button class="btn btn-outline-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- End of Modal-->
+
+<script>
+    $(function () {
+        $(".add-tooltip").tooltip();
+        $("a#filesDelete").on("click", function (event) {
+            if (confirm("Remove this file/folder?")) {
+                $.ajax({url: '@Url.Action("DeleteFile")',type: 'POST',data: JSON.stringify({ virtualPath: $(this).data("path-virtual") }),dataType: 'json',contentType: "application/json; charset=utf-8",success: function (result) {if (result) { reloadWebPage(); } else { alert("System can't delete this file/folder, please get admnistrator for assists!"); } },error: function (result) { console.log(result); }});
+            }
+        });
+
+        $("a#filesDownload").on("click", function (event) {
+            var path = '@Url.Action("DownloadFile")' + '/?virtualPath=' + $(this).data("path-virtual") +'&userID=@Context.User.Identity.Name';
+            window.location.href = path;
+        });
+
+        $("a#fileToOCR").on("click", function (event) {
+            if (confirm("System will perform OCR on this file and update once complete, duration will be depending on file size. Ready to proceed?")) {
+                $.ajax({url: '@Url.Action("OCRThisFile")',type: 'POST',data: JSON.stringify({ virtualPath: $(this).data("path-virtual") }),dataType: 'json',contentType: "application/json; charset=utf-8",success: function (result) {if (result == "") { reloadWebPage(); }else { alert(result); }},error: function (result) { console.log(result); }});
+            }
+        });
+
+        $(document).on("click", ".open_TagsMetadata", function () {
+            var tagVirtualPath = $(this).data('path-virtual');
+            $('#modalTagVirtualPath').val(tagVirtualPath);
+            $("#modalBodyTags").html("");
+            $("#modalTagsMetadataMsg").html("");
+            $.ajax({url: '@Url.Action("GetFileTags")',type: 'POST',data: JSON.stringify({ virtualPath: tagVirtualPath }),dataType: 'json',contentType: "application/json; charset=utf-8",success: function (result) {if (result.Total > 0) {$.each(result.Data, function (key, value) {$.each(value, function (keyName, keyVal) {if (keyName == "TagName") {$("#modalBodyTags").append("<div class=\"btn btn-outline-warning mt-1 mr-1\">" + keyVal + "<button class=\"close ml-1\" onclick=\"modalRemoveTag(this)\">&times;<\/button><\/div>");}});});}},
+                error: function (result) { console.log(result); }
+            });
+        });
+
+        $("#addTagValue").on("click", function () {
+            var inputTagVal = $("#inputTagValue").val().trim();
+            if (inputTagVal.length > 0) {
+                var items = $("#modalBodyTags").children("div");
+                var tagsArr = [];
+                $.each(items, function (i) { tagsArr.push(items[i].firstChild.data); });
+                if (!(tagsArr.includes(inputTagVal))) {
+                    $("#modalBodyTags").append("<div class=\"btn btn-outline-warning mt-1 mr-1\">" + inputTagVal + "<button class=\"close ml-1\" onclick=\"modalRemoveTag(this)\" >&times;<\/button><\/div>");
+                    $("#inputTagValue").val("");
+                } else { $("#modalTagsMetadataMsg").html("<span class=\"small text-danger mb-4 pl-2\">Duplicate name found in Tags<\/span>"); }
+            } else { $("#modalTagsMetadataMsg").html("<span class=\"small text-danger mb-4 pl-2\">Please input the Tag Name or Metadata.<\/span>"); }
+        });
+
+        $(document).on("click", ".open_RenameFileFolder", function () {
+            var thisVirtualPath = $(this).data('path-virtual');
+            var thisfileName = $(this).data('file-name');
+            $("#inputRenameFileFolder").val(thisfileName);
+            $("#modalRenameFileFolder").on("click", function () {
+                //renameFileOrFolder(thisVirtualPath, thisfileName, $("#inputRenameFileFolder").val());
+                if ($("#inputRenameFileFolder").val() != "" && thisfileName != $("#inputRenameFileFolder").val()) {
+                    var formData = new FormData();
+                    formData.append("virtualPath", thisVirtualPath);
+                    formData.append("newName", $("#inputRenameFileFolder").val());
+                    formData.append("oldName", thisfileName);
+                    $.ajax({url: '@Url.Action("Rename")',type: 'POST',data: formData,dataType: 'json',contentType: false,processData: false,success: function (result) { console.log(result); reloadWebPage(); },error: function (result) { console.log(result); }});
+                } else { $("#modalRenameFileFolderMsg").html("<span class=\"small text-danger mb-4 pl-2\">Please input the new name ...<\/span>"); }
+            });
+        });
+    });
+
+    function createNewFolderCheckInput() {
+        if ($("#inputNewFolderName").val().length > 0) {
+            $.ajax({url: '@Url.Action("CreateNewFolder")',type: 'POST',data: JSON.stringify({ virtualPath: "@Model.VirtualPath", userName: "@Context.User.Identity.Name", folderName: $("#inputNewFolderName").val() }),dataType: 'json',contentType: "application/json; charset=utf-8",success: function (result) {if (result != "") { alert(result); } else { reloadWebPage(); }},error: function (result) { console.log(result); }});
+        } else { $("#modalAddFolderMsg").html("<span class=\"small text-danger mb-4 pl-2\">Please enter new folder name ...<\/span>"); }
+        return false;
+    }
+
+    function uploadNewFileCheckInput() {
+        if ($("#uploadNewFileName").val() != "") {
+            var formData = new FormData();
+            var totalFiles = document.getElementById("uploadNewFileName").files.length;
+            for (var i = 0; i < totalFiles; i++) {
+                formData.append("file", document.getElementById("uploadNewFileName").files[i]);
+                formData.append("fileNiceName", $("#uploadNewFileNiceName").val());
+                formData.append("fileDesc", $("#uploadNewFileDesc").val());}
+            $.ajax({url: '@Url.Action("Upload", new { virtualPath=Model.VirtualPath })',type: 'POST',data: formData,dataType: 'json',contentType: false,processData: false,success: function (result) { reloadWebPage(); },error: function (result) { console.log(result); }});
+        } else {
+            $("#modalUploadFileMsg").html("<span class=\"small text-danger mb-4 pl-2\">Please attach a file ...<\/span>");
+        }
+        return false;
+    }
+
+    function saveModalTagsMetadata() {
+        var items = $("#modalBodyTags").children("div");
+        var tagsArr = [];
+        $.each(items, function (i) { tagsArr.push(items[i].firstChild.data); });
+        $.ajax({url: '@Url.Action("InsertFileTags")', type: 'POST',data: JSON.stringify({ tags: tagsArr, virtualPath: $("#modalTagVirtualPath").val() }),dataType: 'json', contentType: "application/json; charset=utf-8", success: function (result) { console.log(result); }, error: function (result) { console.log(result); }});
+    }
+
+    function searchFileOnDMS() {
+        var searchVal = $("#_inputSearchFile").val();
+        if (searchVal != "") {
+            $("#_inputSearchFileButton").attr('href', $("#_inputSearchFileButton").attr('href').replace(/\_searchValueFromInputText/g, searchVal));
+            return true;
+        }
+        return false;
+    }
+
+    function modalRemoveTag(event) { $(event).parent().remove(); }
+
+    function reloadWebPage() { location.reload(); }
+</script>

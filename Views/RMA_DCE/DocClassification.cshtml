@@ -1,0 +1,54 @@
+﻿@model RMA_Docker.Models.DocClassification
+@{
+    ViewBag.Title = "DCE - Document Classification";
+}
+
+<nav class="navbar navbar-expand-lg">
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="nav navbar-nav">
+            <li class="nav-item">
+                <h4 class="text-info">@ViewBag.Title</h4>
+                <h6>Performing OCR and clasifying the document type</h6>
+            </li>
+        </ul>
+    </div>
+</nav>
+
+@using (Html.BeginForm("DocClassification", "RMA_DCE", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    <div class="form-horizontal ">
+        <hr />
+        <div class="form-group">
+            @Html.Label("Upload File", new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.TextBox("file", "", new { @class = "form-control-file small", type = "file" })
+                @if (Model.DocClassifiedMsg != "") {
+                    <span class="text-danger small">@Model.DocClassifiedMsg</span>
+                }
+            </div>
+        </div>
+
+
+
+        <div class="form-group mt-4">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Start OCR & Classify" class="btn btn-outline-primary add-tooltip" />
+            </div>
+        </div>
+
+        <div class="form-group mt-lg-5">
+            <hr />
+            <div class="col-md-offset-2 col-md-auto">
+                <h6 class="text-black-50 ">Result : </h6>
+                @if (Model.DocClassifiedOutcome == "") {
+                <span class="text-black-50 small">result required to progress before display, please wait...</span>
+                } else {
+                <div class="text-black-50 small">@Html.Raw(Model.DocClassifiedOutcome)</div>
+                }
+                
+            </div>
+        </div>
+
+
+    </div>
+}

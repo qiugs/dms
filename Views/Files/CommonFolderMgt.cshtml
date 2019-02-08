@@ -1,0 +1,103 @@
+﻿@model RMA_Docker.Models.CommonFolderManagement
+
+@{
+    ViewBag.Title = "Common Folder Management";
+}
+
+<nav class="navbar navbar-expand-lg">
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="nav navbar-nav">
+            <li class="nav-item">
+                <h4 class="text-info">@ViewBag.Title</h4>
+                <h6></h6>
+            </li>
+        </ul>
+    </div>
+</nav>
+<hr />
+
+@using (Html.BeginForm()) {
+    <div class="form-horizontal">
+        <div class="form-group">
+            @Html.LabelFor(model => model.FolderName, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.FolderName, new { htmlAttributes = new { @class = "form-control" } })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @if (TempData["CommonFolderMgtErrorMsg"] != null) {
+                <div class="text-danger small pl-3"><span>@TempData["CommonFolderMgtErrorMsg"].ToString()</span></div>
+            }
+            <div class="text-danger small pl-3"><span id="commonFolderErrorMsg"></span></div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" name="submit" value="Create" class="btn btn-outline-success" onclick="return CreateValidate()" />
+            </div>
+        </div>
+    </div>
+
+    <div class="form-group mt-5 w-100">
+        <hr />
+        <input hidden id="tableSelectedFolder" name="tableSelectedFolder" value="" type="text">
+        <table id="CommonFolderTable" class="table table-striped table-bordered" style="width:100%">
+            <thead>
+                <tr>
+                    <th>Folder Name</th>
+                    <th>Users</th>
+                    <th>Roles</th>
+                    <th>Created</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.CommonFolderAssignment) {
+                <tr>
+                    <td>@item.FolderName</td>
+                    <td>
+                        @foreach (var user in item.UsersName) { <div class="border border-info rounded">@user</div> }
+                    </td>
+                    <td>
+                        @foreach (var role in item.RolesName) { <div class="border border-info rounded">@role</div> }
+                    </td>
+                    <td>@item.CreatedAt</td>
+                    <td>
+                        <input type="submit" name="submit" value="Edit" class="btn btn-outline-info" onclick='EditFolder("@item.VirtualPath")' />
+                        <input type="submit" name="submit" value="Delete" class="btn btn-outline-warning" onclick='return DeleteFolder("@item.VirtualPath")' />
+                    </td>
+                </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+
+<!-- DataTable JS -->
+<script type="text/javascript" src="~/Scripts/datatables.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('#CommonFolderTable').DataTable({destroy:true,info:false,order:[[0,"asc"]],aoColumnDefs:[{"width":"200px",targets:2},{bSortable:false,aTargets:[1,2]}]});
+    });
+
+    function DeleteFolder(folderPath) {
+        if (confirm("Please be aware that everything under this folder will be deleted with this folder. Confirm to delete?")) {
+            $('#tableSelectedFolder').val(folderPath);
+            return true;
+        }
+        return false;
+    }
+
+    function EditFolder(folderPath) {
+        $('#tableSelectedFolder').val(folderPath);
+    }
+
+    function CreateValidate() {
+        if ($('#FolderName').val().length <= 0) {
+            $('#commonFolderErrorMsg').text("Error - Folder Name cannot be empty.");
+            return false;
+        }
+        return true;
+    }
+</script>
